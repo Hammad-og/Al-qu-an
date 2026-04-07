@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Al-Quran — Complete Tilawat & Reading</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Noto+Nastaliq+Urdu:wght@400;500&family=Cairo:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g:#1D9E75;--gd:#085041;--gl:#E1F5EE;--gold:#BA7517;--goldl:#FAEEDA;
+  --bg:#f8faf9;--card:#fff;--border:#d9e8e2;--txt:#1a2e28;--txt2:#5a7a70;
+}
+body{background:var(--bg);font-family:'Cairo',sans-serif;color:var(--txt)}
+.app{max-width:760px;margin:0 auto;padding:.75rem .75rem 3rem}
+
+/* HEADER */
+.header{text-align:center;padding:1.2rem 0 .9rem}
+.bismillah{font-family:'Amiri',serif;font-size:26px;color:var(--g);direction:rtl;margin-bottom:4px}
+.appname{font-size:19px;font-weight:600;color:var(--txt)}
+.appsub{font-size:12px;color:var(--txt2);margin-top:2px}
+
+/* TABS */
+.tabs{display:flex;gap:0;border:.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:1rem;background:#edf5f1}
+.tab{flex:1;padding:9px 4px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:500;border:none;background:transparent;cursor:pointer;color:var(--txt2);transition:all .18s;text-align:center}
+.tab.on{background:var(--g);color:#fff}
+
+/* SEARCH */
+.search-row{display:flex;gap:8px;margin-bottom:.75rem}
+.sinp{flex:1;font-family:'Cairo',sans-serif;font-size:14px;padding:9px 13px;border:.5px solid var(--border);border-radius:9px;background:var(--card);color:var(--txt);outline:none}
+.sinp:focus{border-color:var(--g);box-shadow:0 0 0 2px #1D9E7520}
+.sbtn{background:var(--g);color:#fff;border:none;border-radius:9px;padding:9px 18px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:600;cursor:pointer}
+.sbtn:hover{background:var(--gd)}
+
+/* QUICK BTNS */
+.ql{font-size:11px;color:var(--txt2);margin-bottom:5px}
+.qbtns{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:.75rem}
+.qbtn{font-family:'Cairo',sans-serif;font-size:11px;padding:3px 10px;border-radius:20px;border:.5px solid var(--border);background:var(--card);color:var(--txt2);cursor:pointer;transition:all .15s}
+.qbtn:hover{background:var(--gl);border-color:var(--g);color:var(--gd)}
+
+/* PARA GRID */
+.para-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;margin-bottom:1rem}
+.para-card{background:var(--card);border:.5px solid var(--border);border-radius:9px;padding:8px 6px;text-align:center;cursor:pointer;transition:all .15s}
+.para-card:hover{border-color:var(--g);background:var(--gl)}
+.para-card.on{border-color:var(--g);border-width:1.5px;background:var(--gl)}
+.para-num{font-size:18px;font-weight:600;color:var(--g)}
+.para-ar{font-family:'Amiri',serif;font-size:13px;color:var(--txt);direction:rtl;margin:2px 0}
+.para-info{font-size:10px;color:var(--txt2)}
+
+/* PANEL */
+.panel{background:var(--card);border:1px solid var(--g);border-radius:12px;overflow:hidden;margin-bottom:1rem;animation:fu .3s ease}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.panel-hdr{padding:.9rem 1rem .6rem;display:flex;align-items:center;gap:10px}
+.snum{width:36px;height:36px;min-width:36px;border-radius:50%;background:var(--gl);color:var(--gd);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.sinfo{flex:1}
+.sen{font-size:16px;font-weight:600;color:var(--txt)}
+.sar{font-family:'Amiri',serif;font-size:18px;color:var(--g);margin-left:6px}
+.smeta{font-size:11px;color:var(--txt2);margin-top:1px}
+
+/* LANG/RECITER ROW */
+.row-bar{padding:0 1rem .6rem;display:flex;gap:5px;flex-wrap:wrap;align-items:center}
+.row-label{font-size:11px;color:var(--txt2)}
+.pill{font-family:'Cairo',sans-serif;font-size:11px;padding:3px 10px;border-radius:20px;border:.5px solid var(--border);background:#edf5f1;color:var(--txt2);cursor:pointer;transition:all .15s}
+.pill.on{background:var(--gl);border-color:var(--g);color:var(--gd);font-weight:600}
+
+/* AUDIO PLAYER */
+.audio-panel{margin:0 1rem .75rem;background:var(--gl);border-radius:10px;padding:.75rem 1rem;border:.5px solid var(--g)}
+.audio-title{font-size:12px;color:var(--gd);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.audio-title span{width:8px;height:8px;border-radius:50%;background:var(--g);display:inline-block;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.audio-title span.stopped{animation:none;opacity:.3}
+audio{width:100%;height:36px;border-radius:6px;outline:none}
+audio::-webkit-media-controls-panel{background:var(--gl)}
+.audio-note{font-size:10px;color:var(--txt2);margin-top:5px}
+
+/* RECITER TABS */
+.reciter-tabs{display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap}
+.rtab{font-family:'Cairo',sans-serif;font-size:11px;padding:4px 12px;border-radius:20px;border:.5px solid var(--border);background:var(--card);color:var(--txt2);cursor:pointer;transition:all .15s}
+.rtab.on{background:var(--g);color:#fff;border-color:var(--g)}
+
+/* EXTERNAL LINKS */
+.qlink-row{padding:.5rem 1rem .75rem;display:flex;gap:8px;flex-wrap:wrap}
+.qlink{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:7px;font-size:11px;font-family:'Cairo',sans-serif;font-weight:600;text-decoration:none;border:.5px solid var(--border);color:var(--txt2);background:#edf5f1;cursor:pointer}
+.qlink:hover{background:var(--gl);border-color:var(--g);color:var(--gd)}
+.qdot{width:6px;height:6px;border-radius:50%;background:var(--g);display:inline-block}
+
+/* AYAH */
+.ayah-box{padding:.75rem 1rem;border-top:.5px solid var(--border)}
+.ayah-ar{font-family:'Amiri Quran',serif;font-size:22px;line-height:2.2;direction:rtl;text-align:right;color:var(--txt);margin-bottom:.5rem}
+.ayah-en{font-size:13px;line-height:1.7;color:var(--txt2);margin-bottom:.3rem}
+.ayah-ur{font-family:'Noto Nastaliq Urdu',serif;font-size:15px;line-height:2.2;direction:rtl;text-align:right;color:var(--txt2)}
+.ayah-num{font-size:10px;color:var(--txt2);margin-bottom:6px;font-weight:500}
+
+/* LOADING */
+.loading-ayah{padding:1.5rem;text-align:center}
+.dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--g);margin:0 2px;animation:bop 1.2s infinite}
+.dots span:nth-child(2){animation-delay:.2s}
+.dots span:nth-child(3){animation-delay:.4s}
+@keyframes bop{0%,80%,100%{transform:scale(.7);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+.err-card{background:var(--card);border:1.5px solid #E24B4A;border-radius:12px;padding:1rem;animation:fu .3s ease}
+.correction{background:var(--goldl);border:.5px solid var(--gold);border-radius:7px;padding:5px 10px;font-size:11px;color:#633806;margin:0 1rem .5rem}
+
+/* PARA */
+.para-view{padding:.75rem 1rem}
+.para-surah-list{display:flex;flex-direction:column;gap:6px}
+.para-surah-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border:.5px solid var(--border);border-radius:8px;cursor:pointer;transition:all .15s;background:var(--card)}
+.para-surah-item:hover{border-color:var(--g);background:var(--gl)}
+.psi-num{width:28px;height:28px;min-width:28px;border-radius:50%;background:var(--gl);color:var(--gd);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.psi-name{flex:1;font-size:13px;font-weight:500;color:var(--txt)}
+.psi-ar{font-family:'Amiri',serif;font-size:15px;color:var(--g)}
+.psi-meta{font-size:10px;color:var(--txt2)}
+
+/* PARA INLINE READ */
+.para-inline-read{background:var(--card);border:1px solid var(--g);border-radius:10px;margin-top:.75rem;overflow:hidden;animation:fu .3s ease}
+.pir-hdr{padding:.6rem 1rem;background:var(--gl);display:flex;align-items:center;gap:8px;border-bottom:.5px solid var(--border)}
+.pir-title{font-size:14px;font-weight:600;color:var(--gd)}
+.pir-close{margin-left:auto;background:none;border:none;font-size:18px;cursor:pointer;color:var(--gd)}
+
+/* TRANSLATION BANNER */
+.trans-banner{padding:.5rem 1rem;background:#f0f9f5;border-bottom:.5px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.trans-label{font-size:11px;color:var(--txt2)}
+
+/* AUDIO STATE */
+.audio-loading{font-size:11px;color:var(--txt2);padding:4px 0}
+
+/* FOOTER */
+.site-footer{max-width:760px;margin:2rem auto 0;padding:1.25rem 1rem 2rem;border-top:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:.5rem;text-align:center}
+.footer-built{font-size:11px;color:var(--txt2)}
+.footer-name{display:inline-flex;align-items:center;gap:6px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:600;color:var(--g);text-decoration:none;padding:5px 14px;border:.5px solid var(--g);border-radius:20px;background:var(--gl);transition:all .18s}
+.footer-name:hover{background:var(--g);color:#fff}
+.footer-links{display:flex;gap:10px;margin-top:2px}
+.footer-link{font-size:11px;color:var(--txt2);text-decoration:none;padding:2px 6px;border-radius:5px;transition:all .15s}
+.footer-link:hover{color:var(--g)}
+.footer-copy{font-size:10px;color:#aac4ba;margin-top:2px}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="bismillah">بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيْمِ</div>
+    <div class="appname">Al-Quran — Complete Tilawat & Reading</div>
+    <div class="appsub">114 Surahs · 30 Paras · Arabic · English · Urdu · Audio Tilawat</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" onclick="switchTab('tilawat',this)">🎧 Tilawat</button>
+    <button class="tab" onclick="switchTab('read',this)">📖 Read Quran</button>
+    <button class="tab" onclick="switchTab('para',this)">30 Paras</button>
+  </div>
+
+  <!-- TILAWAT TAB -->
+  <div id="tab-tilawat">
+    <div class="search-row">
+      <input class="sinp" id="inp" placeholder="Type Surah — Yaseen, Fatiha, Rahman, Mulk..." autocomplete="off"/>
+      <button class="sbtn" onclick="go()">Play</button>
+    </div>
+    <div class="ql">Quick play</div>
+    <div class="qbtns" id="qbtns"></div>
+    <div id="tarea"></div>
+  </div>
+
+  <!-- READ TAB -->
+  <div id="tab-read" style="display:none">
+    <div class="search-row">
+      <input class="sinp" id="rinp" placeholder="Search Surah — Kahf, Mulk, Ikhlas..." autocomplete="off"/>
+      <button class="sbtn" onclick="goRead()">Read</button>
+    </div>
+    <div class="ql">Quick read</div>
+    <div class="qbtns" id="rbtns"></div>
+    <div id="rarea"></div>
+  </div>
+
+  <!-- PARA TAB -->
+  <div id="tab-para" style="display:none">
+    <div class="ql" style="margin-bottom:8px">Select a Para (Juz) — tap to read with translation</div>
+    <div class="para-grid" id="paragrid"></div>
+    <div id="paraarea"></div>
+  </div>
+</div>
+
+<script>
+// ─── SURAH DATA ───────────────────────────────────────────────────────────────
+// Reciter codes for mp3quran.net (trusted CDN, no embed issues)
+// sudais=ar.alafasy, mishary=ar.alafasy (Mishary), minshawi=ar.minshawi
+// mp3quran.net format: https://server8.mp3quran.net/afs/001.mp3  (Mishary Alafasy)
+// server6 = Sudais, server8 = Mishary Alafasy, server13 = Minshawi
+
+const RECITERS = {
+  mishary: { name:"Mishary Alafasy", server:"https://server8.mp3quran.net/afs/" },
+  sudais:  { name:"Sudais",          server:"https://server6.mp3quran.net/abu_jad/" },
+  minshawi:{ name:"Minshawi",        server:"https://server13.mp3quran.net/minsh/" },
+  husary:  { name:"Husary",          server:"https://server13.mp3quran.net/husr/" },
+};
+
+function mp3url(reciter, surahN){
+  const num = String(surahN).padStart(3,'0');
+  return RECITERS[reciter].server + num + '.mp3';
+}
+
+const SURAHS=[
+{n:1,en:"Al-Fatiha",ar:"الفاتحة",t:"Meccan",v:7,p:1},
+{n:2,en:"Al-Baqarah",ar:"البقرة",t:"Medinan",v:286,p:1},
+{n:3,en:"Al-Imran",ar:"آل عمران",t:"Medinan",v:200,p:3},
+{n:4,en:"An-Nisa",ar:"النساء",t:"Medinan",v:176,p:4},
+{n:5,en:"Al-Maidah",ar:"المائدة",t:"Medinan",v:120,p:6},
+{n:6,en:"Al-Anam",ar:"الأنعام",t:"Meccan",v:165,p:7},
+{n:7,en:"Al-Araf",ar:"الأعراف",t:"Meccan",v:206,p:8},
+{n:8,en:"Al-Anfal",ar:"الأنفال",t:"Medinan",v:75,p:9},
+{n:9,en:"At-Tawbah",ar:"التوبة",t:"Medinan",v:129,p:10},
+{n:10,en:"Yunus",ar:"يونس",t:"Meccan",v:109,p:11},
+{n:11,en:"Hud",ar:"هود",t:"Meccan",v:123,p:11},
+{n:12,en:"Yusuf",ar:"يوسف",t:"Meccan",v:111,p:12},
+{n:13,en:"Ar-Ra'd",ar:"الرعد",t:"Medinan",v:43,p:13},
+{n:14,en:"Ibrahim",ar:"إبراهيم",t:"Meccan",v:52,p:13},
+{n:15,en:"Al-Hijr",ar:"الحجر",t:"Meccan",v:99,p:14},
+{n:16,en:"An-Nahl",ar:"النحل",t:"Meccan",v:128,p:14},
+{n:17,en:"Al-Isra",ar:"الإسراء",t:"Meccan",v:111,p:15},
+{n:18,en:"Al-Kahf",ar:"الكهف",t:"Meccan",v:110,p:15},
+{n:19,en:"Maryam",ar:"مريم",t:"Meccan",v:98,p:16},
+{n:20,en:"Ta-Ha",ar:"طه",t:"Meccan",v:135,p:16},
+{n:21,en:"Al-Anbiya",ar:"الأنبياء",t:"Meccan",v:112,p:17},
+{n:22,en:"Al-Hajj",ar:"الحج",t:"Medinan",v:78,p:17},
+{n:23,en:"Al-Muminun",ar:"المؤمنون",t:"Meccan",v:118,p:18},
+{n:24,en:"An-Nur",ar:"النور",t:"Medinan",v:64,p:18},
+{n:25,en:"Al-Furqan",ar:"الفرقان",t:"Meccan",v:77,p:18},
+{n:26,en:"Ash-Shu'ara",ar:"الشعراء",t:"Meccan",v:227,p:19},
+{n:27,en:"An-Naml",ar:"النمل",t:"Meccan",v:93,p:19},
+{n:28,en:"Al-Qasas",ar:"القصص",t:"Meccan",v:88,p:20},
+{n:29,en:"Al-Ankabut",ar:"العنكبوت",t:"Meccan",v:69,p:20},
+{n:30,en:"Ar-Rum",ar:"الروم",t:"Meccan",v:60,p:21},
+{n:31,en:"Luqman",ar:"لقمان",t:"Meccan",v:34,p:21},
+{n:32,en:"As-Sajdah",ar:"السجدة",t:"Meccan",v:30,p:21},
+{n:33,en:"Al-Ahzab",ar:"الأحزاب",t:"Medinan",v:73,p:21},
+{n:34,en:"Saba",ar:"سبأ",t:"Meccan",v:54,p:22},
+{n:35,en:"Fatir",ar:"فاطر",t:"Meccan",v:45,p:22},
+{n:36,en:"Ya-Sin",ar:"يس",t:"Meccan",v:83,p:22},
+{n:37,en:"As-Saffat",ar:"الصافات",t:"Meccan",v:182,p:23},
+{n:38,en:"Sad",ar:"ص",t:"Meccan",v:88,p:23},
+{n:39,en:"Az-Zumar",ar:"الزمر",t:"Meccan",v:75,p:23},
+{n:40,en:"Ghafir",ar:"غافر",t:"Meccan",v:85,p:24},
+{n:41,en:"Fussilat",ar:"فصلت",t:"Meccan",v:54,p:24},
+{n:42,en:"Ash-Shura",ar:"الشورى",t:"Meccan",v:53,p:25},
+{n:43,en:"Az-Zukhruf",ar:"الزخرف",t:"Meccan",v:89,p:25},
+{n:44,en:"Ad-Dukhan",ar:"الدخان",t:"Meccan",v:59,p:25},
+{n:45,en:"Al-Jathiyah",ar:"الجاثية",t:"Meccan",v:37,p:25},
+{n:46,en:"Al-Ahqaf",ar:"الأحقاف",t:"Meccan",v:35,p:26},
+{n:47,en:"Muhammad",ar:"محمد",t:"Medinan",v:38,p:26},
+{n:48,en:"Al-Fath",ar:"الفتح",t:"Medinan",v:29,p:26},
+{n:49,en:"Al-Hujurat",ar:"الحجرات",t:"Medinan",v:18,p:26},
+{n:50,en:"Qaf",ar:"ق",t:"Meccan",v:45,p:26},
+{n:51,en:"Adh-Dhariyat",ar:"الذاريات",t:"Meccan",v:60,p:26},
+{n:52,en:"At-Tur",ar:"الطور",t:"Meccan",v:49,p:27},
+{n:53,en:"An-Najm",ar:"النجم",t:"Meccan",v:62,p:27},
+{n:54,en:"Al-Qamar",ar:"القمر",t:"Meccan",v:55,p:27},
+{n:55,en:"Ar-Rahman",ar:"الرحمن",t:"Medinan",v:78,p:27},
+{n:56,en:"Al-Waqiah",ar:"الواقعة",t:"Meccan",v:96,p:27},
+{n:57,en:"Al-Hadid",ar:"الحديد",t:"Medinan",v:29,p:27},
+{n:58,en:"Al-Mujadila",ar:"المجادلة",t:"Medinan",v:22,p:28},
+{n:59,en:"Al-Hashr",ar:"الحشر",t:"Medinan",v:24,p:28},
+{n:60,en:"Al-Mumtahanah",ar:"الممتحنة",t:"Medinan",v:13,p:28},
+{n:61,en:"As-Saf",ar:"الصف",t:"Medinan",v:14,p:28},
+{n:62,en:"Al-Jumuah",ar:"الجمعة",t:"Medinan",v:11,p:28},
+{n:63,en:"Al-Munafiqun",ar:"المنافقون",t:"Medinan",v:11,p:28},
+{n:64,en:"At-Taghabun",ar:"التغابن",t:"Medinan",v:18,p:28},
+{n:65,en:"At-Talaq",ar:"الطلاق",t:"Medinan",v:12,p:28},
+{n:66,en:"At-Tahrim",ar:"التحريم",t:"Medinan",v:12,p:28},
+{n:67,en:"Al-Mulk",ar:"الملك",t:"Meccan",v:30,p:29},
+{n:68,en:"Al-Qalam",ar:"القلم",t:"Meccan",v:52,p:29},
+{n:69,en:"Al-Haqqah",ar:"الحاقة",t:"Meccan",v:52,p:29},
+{n:70,en:"Al-Ma'arij",ar:"المعارج",t:"Meccan",v:44,p:29},
+{n:71,en:"Nuh",ar:"نوح",t:"Meccan",v:28,p:29},
+{n:72,en:"Al-Jinn",ar:"الجن",t:"Meccan",v:28,p:29},
+{n:73,en:"Al-Muzzammil",ar:"المزمل",t:"Meccan",v:20,p:29},
+{n:74,en:"Al-Muddaththir",ar:"المدثر",t:"Meccan",v:56,p:29},
+{n:75,en:"Al-Qiyamah",ar:"القيامة",t:"Meccan",v:40,p:29},
+{n:76,en:"Al-Insan",ar:"الإنسان",t:"Medinan",v:31,p:29},
+{n:77,en:"Al-Mursalat",ar:"المرسلات",t:"Meccan",v:50,p:29},
+{n:78,en:"An-Naba",ar:"النبأ",t:"Meccan",v:40,p:30},
+{n:79,en:"An-Naziat",ar:"النازعات",t:"Meccan",v:46,p:30},
+{n:80,en:"Abasa",ar:"عبس",t:"Meccan",v:42,p:30},
+{n:81,en:"At-Takwir",ar:"التكوير",t:"Meccan",v:29,p:30},
+{n:82,en:"Al-Infitar",ar:"الإنفطار",t:"Meccan",v:19,p:30},
+{n:83,en:"Al-Mutaffifin",ar:"المطففين",t:"Meccan",v:36,p:30},
+{n:84,en:"Al-Inshiqaq",ar:"الانشقاق",t:"Meccan",v:25,p:30},
+{n:85,en:"Al-Buruj",ar:"البروج",t:"Meccan",v:22,p:30},
+{n:86,en:"At-Tariq",ar:"الطارق",t:"Meccan",v:17,p:30},
+{n:87,en:"Al-Ala",ar:"الأعلى",t:"Meccan",v:19,p:30},
+{n:88,en:"Al-Ghashiyah",ar:"الغاشية",t:"Meccan",v:26,p:30},
+{n:89,en:"Al-Fajr",ar:"الفجر",t:"Meccan",v:30,p:30},
+{n:90,en:"Al-Balad",ar:"البلد",t:"Meccan",v:20,p:30},
+{n:91,en:"Ash-Shams",ar:"الشمس",t:"Meccan",v:15,p:30},
+{n:92,en:"Al-Layl",ar:"الليل",t:"Meccan",v:21,p:30},
+{n:93,en:"Ad-Duha",ar:"الضحى",t:"Meccan",v:11,p:30},
+{n:94,en:"Ash-Sharh",ar:"الشرح",t:"Meccan",v:8,p:30},
+{n:95,en:"At-Tin",ar:"التين",t:"Meccan",v:8,p:30},
+{n:96,en:"Al-Alaq",ar:"العلق",t:"Meccan",v:19,p:30},
+{n:97,en:"Al-Qadr",ar:"القدر",t:"Meccan",v:5,p:30},
+{n:98,en:"Al-Bayyinah",ar:"البينة",t:"Medinan",v:8,p:30},
+{n:99,en:"Az-Zalzalah",ar:"الزلزلة",t:"Medinan",v:8,p:30},
+{n:100,en:"Al-Adiyat",ar:"العاديات",t:"Meccan",v:11,p:30},
+{n:101,en:"Al-Qari'ah",ar:"القارعة",t:"Meccan",v:11,p:30},
+{n:102,en:"At-Takathur",ar:"التكاثر",t:"Meccan",v:8,p:30},
+{n:103,en:"Al-Asr",ar:"العصر",t:"Meccan",v:3,p:30},
+{n:104,en:"Al-Humazah",ar:"الهمزة",t:"Meccan",v:9,p:30},
+{n:105,en:"Al-Fil",ar:"الفيل",t:"Meccan",v:5,p:30},
+{n:106,en:"Quraysh",ar:"قريش",t:"Meccan",v:4,p:30},
+{n:107,en:"Al-Ma'un",ar:"الماعون",t:"Meccan",v:7,p:30},
+{n:108,en:"Al-Kawthar",ar:"الكوثر",t:"Meccan",v:3,p:30},
+{n:109,en:"Al-Kafirun",ar:"الكافرون",t:"Meccan",v:6,p:30},
+{n:110,en:"An-Nasr",ar:"النصر",t:"Medinan",v:3,p:30},
+{n:111,en:"Al-Masad",ar:"المسد",t:"Meccan",v:5,p:30},
+{n:112,en:"Al-Ikhlas",ar:"الإخلاص",t:"Meccan",v:4,p:30},
+{n:113,en:"Al-Falaq",ar:"الفلق",t:"Meccan",v:5,p:30},
+{n:114,en:"An-Nas",ar:"الناس",t:"Meccan",v:6,p:30},
+];
+
+const PARAS=[
+ {n:1,ar:"الم",name:"Alif Lam Meem",from:"Al-Fatiha 1",surahs:[1,2]},
+ {n:2,ar:"سَيَقُولُ",name:"Sayaqool",from:"Al-Baqarah 142",surahs:[2]},
+ {n:3,ar:"تِلْكَ الرُّسُلُ",name:"Tilkal Rusul",from:"Al-Baqarah 253",surahs:[2,3]},
+ {n:4,ar:"لَنْ تَنَالُوا",name:"Lan Tanaloo",from:"Al-Imran 92",surahs:[3,4]},
+ {n:5,ar:"وَالْمُحْصَنَاتُ",name:"Wal Mohsanat",from:"An-Nisa 24",surahs:[4,5]},
+ {n:6,ar:"لَا يُحِبُّ اللَّهُ",name:"La Yuhibbullah",from:"An-Nisa 148",surahs:[4,5,6]},
+ {n:7,ar:"وَإِذَا سَمِعُوا",name:"Wa Iza Samiu",from:"Al-Maidah 82",surahs:[5,6]},
+ {n:8,ar:"وَلَوْ أَنَّنَا",name:"Wa Lau Annana",from:"Al-Anam 111",surahs:[6,7]},
+ {n:9,ar:"قَالَ الْمَلَأُ",name:"Qalal Malao",from:"Al-Araf 88",surahs:[7,8,9]},
+ {n:10,ar:"وَاعْلَمُوا",name:"Wa'lamu",from:"Al-Anfal 41",surahs:[8,9]},
+ {n:11,ar:"يَعْتَذِرُونَ",name:"Ya'taziroon",from:"At-Tawbah 94",surahs:[9,10,11]},
+ {n:12,ar:"وَمَا مِنْ دَابَّةٍ",name:"Wa Mamin Da'abba",from:"Hud 6",surahs:[11,12]},
+ {n:13,ar:"وَمَا أُبَرِّئُ",name:"Wa Ma Ubarri",from:"Yusuf 53",surahs:[12,13,14]},
+ {n:14,ar:"رُبَمَا",name:"Rubama",from:"Al-Hijr 1",surahs:[15,16]},
+ {n:15,ar:"سُبْحَانَ الَّذِي",name:"Subhanallazi",from:"Al-Isra 1",surahs:[17,18]},
+ {n:16,ar:"قَالَ أَلَمْ",name:"Qal Alam",from:"Al-Kahf 75",surahs:[18,19,20]},
+ {n:17,ar:"اقْتَرَبَ لِلنَّاسِ",name:"Iqtaraba",from:"Al-Anbiya 1",surahs:[21,22]},
+ {n:18,ar:"قَدْ أَفْلَحَ",name:"Qaad Aflaha",from:"Al-Muminun 1",surahs:[23,24,25]},
+ {n:19,ar:"وَقَالَ الَّذِينَ",name:"Wa Qalallazina",from:"Al-Furqan 21",surahs:[25,26,27]},
+ {n:20,ar:"أَمَّنْ خَلَقَ",name:"Amman Khalaq",from:"An-Naml 60",surahs:[27,28,29]},
+ {n:21,ar:"اتْلُ مَا أُوحِيَ",name:"Utlu Ma Oohi",from:"Al-Ankabut 45",surahs:[29,30,31,32,33]},
+ {n:22,ar:"وَمَنْ يَقْنُتْ",name:"Wa Mayyaqnut",from:"Al-Ahzab 31",surahs:[33,34,35,36]},
+ {n:23,ar:"وَمَا لِيَ",name:"Wa Mali",from:"Ya-Sin 22",surahs:[36,37,38,39]},
+ {n:24,ar:"فَمَنْ أَظْلَمُ",name:"Faman Azlam",from:"Az-Zumar 32",surahs:[39,40,41]},
+ {n:25,ar:"إِلَيْهِ يُرَدُّ",name:"Ilaihi Yuraddu",from:"Fussilat 47",surahs:[41,42,43,44,45]},
+ {n:26,ar:"حم",name:"Ha Meem",from:"Al-Ahqaf 1",surahs:[46,47,48,49,50,51]},
+ {n:27,ar:"قَالَ فَمَا خَطْبُكُمْ",name:"Qala Fama Khatbukum",from:"Adh-Dhariyat 31",surahs:[51,52,53,54,55,56,57]},
+ {n:28,ar:"قَدْ سَمِعَ اللَّهُ",name:"Qadd Sami Allah",from:"Al-Mujadila 1",surahs:[58,59,60,61,62,63,64,65,66]},
+ {n:29,ar:"تَبَارَكَ الَّذِي",name:"Tabarakallazi",from:"Al-Mulk 1",surahs:[67,68,69,70,71,72,73,74,75,76,77]},
+ {n:30,ar:"عَمَّ",name:"Amma",from:"An-Naba 1",surahs:[78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114]},
+];
+
+const ALIASES={
+  "fatiha":"Al-Fatiha","fateha":"Al-Fatiha","faitha":"Al-Fatiha",
+  "baqara":"Al-Baqarah","baqra":"Al-Baqarah","bakra":"Al-Baqarah","baqarah":"Al-Baqarah",
+  "yaseen":"Ya-Sin","yasin":"Ya-Sin","yaasin":"Ya-Sin","ya sin":"Ya-Sin",
+  "rehman":"Ar-Rahman","rahman":"Ar-Rahman",
+  "waqia":"Al-Waqiah","waqiah":"Al-Waqiah",
+  "mulk":"Al-Mulk","tabarak":"Al-Mulk",
+  "kahaf":"Al-Kahf","kahf":"Al-Kahf",
+  "ikhlas":"Al-Ikhlas","falaq":"Al-Falaq","nas":"An-Nas","naas":"An-Nas",
+  "fajr":"Al-Fajr","fajar":"Al-Fajr",
+  "duha":"Ad-Duha","zuha":"Ad-Duha","doha":"Ad-Duha",
+  "kafirun":"Al-Kafirun","kafiroon":"Al-Kafirun",
+  "kawthar":"Al-Kawthar","kausar":"Al-Kawthar","kosar":"Al-Kawthar",
+  "maryam":"Maryam","mariam":"Maryam",
+  "ibrahim":"Ibrahim","ibraheem":"Ibrahim",
+  "muhammad":"Muhammad","mohammed":"Muhammad",
+  "nuh":"Nuh","nooh":"Nuh","jinn":"Al-Jinn","jin":"Al-Jinn",
+  "nasr":"An-Nasr","asr":"Al-Asr","asar":"Al-Asr",
+  "sharh":"Ash-Sharh","inshirah":"Ash-Sharh",
+  "tin":"At-Tin","teen":"At-Tin",
+  "qadr":"Al-Qadr","zalzala":"Az-Zalzalah","zilzal":"Az-Zalzalah",
+  "fil":"Al-Fil","feel":"Al-Fil",
+  "imran":"Al-Imran","ale imran":"Al-Imran","aal imran":"Al-Imran",
+  "naba":"An-Naba","dukhan":"Ad-Dukhan",
+  "muzzammil":"Al-Muzzammil","muzammil":"Al-Muzzammil",
+  "jumuah":"Al-Jumuah","jumma":"Al-Jumuah","juma":"Al-Jumuah",
+  "sajda":"As-Sajdah","alaq":"Al-Alaq","iqra":"Al-Alaq",
+  "ala":"Al-Ala","insan":"Al-Insan","hashr":"Al-Hashr",
+  "fath":"Al-Fath","isra":"Al-Isra","taha":"Ta-Ha","ta ha":"Ta-Ha",
+  "muminun":"Al-Muminun","nur":"An-Nur","zumar":"Az-Zumar","qaf":"Qaf",
+  "yusuf":"Yusuf","yousuf":"Yusuf","anam":"Al-Anam","araf":"Al-Araf",
+  "nisa":"An-Nisa","nissa":"An-Nisa","maidah":"Al-Maidah","maida":"Al-Maidah",
+  "abasa":"Abasa","ghashiyah":"Al-Ghashiyah","dhariyat":"Adh-Dhariyat",
+  "hujurat":"Al-Hujurat","ankabut":"Al-Ankabut","rum":"Ar-Rum","luqman":"Luqman",
+  "ahzab":"Al-Ahzab","saba":"Saba","fatir":"Fatir","saffat":"As-Saffat",
+  "sad":"Sad","ghafir":"Ghafir","fussilat":"Fussilat","shura":"Ash-Shura",
+  "zukhruf":"Az-Zukhruf","jathiyah":"Al-Jathiyah","ahqaf":"Al-Ahqaf",
+  "hadid":"Al-Hadid","mujadila":"Al-Mujadila","mumtahanah":"Al-Mumtahanah",
+  "taghabun":"At-Taghabun","talaq":"At-Talaq","tahrim":"At-Tahrim",
+  "qalam":"Al-Qalam","haqqah":"Al-Haqqah","maarij":"Al-Ma'arij",
+  "mursalat":"Al-Mursalat","naziat":"An-Naziat","takwir":"At-Takwir",
+  "infitar":"Al-Infitar","mutaffifin":"Al-Mutaffifin","inshiqaq":"Al-Inshiqaq",
+  "buruj":"Al-Buruj","tariq":"At-Tariq","ghashiya":"Al-Ghashiyah",
+  "balad":"Al-Balad","shams":"Ash-Shams","layl":"Al-Layl",
+  "bayyinah":"Al-Bayyinah","adiyat":"Al-Adiyat","qariah":"Al-Qari'ah",
+  "takathur":"At-Takathur","humazah":"Al-Humazah","quraysh":"Quraysh",
+  "maun":"Al-Ma'un","masad":"Al-Masad","lahab":"Al-Masad",
+};
+
+let reciter='mishary', showLang={ar:true,en:true,ur:false}, curTab='tilawat';
+
+// ─── SEARCH ───────────────────────────────────────────────────────────────────
+function lev(a,b){const m=a.length,n=b.length;const dp=Array.from({length:m+1},(_,i)=>Array.from({length:n+1},(_,j)=>i===0?j:j===0?i:0));for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j-1],dp[i-1][j],dp[i][j-1]);return dp[m][n];}
+function cl(s){return s.toLowerCase().replace(/^(al|an|at|as|az|ad|ar|ash)[\s-]+/,'').replace(/[^a-z0-9\s\-']/g,'').trim();}
+function findS(q){
+  const raw=q.trim().toLowerCase().replace(/^(surah|sura|soorah)\s+/i,'').trim();
+  const qc=raw.replace(/[^a-z0-9\s\-']/g,'').trim();
+  if(ALIASES[qc])return{s:SURAHS.find(x=>x.en===ALIASES[qc]),corrected:ALIASES[qc]};
+  const direct=SURAHS.find(s=>s.en.toLowerCase()===qc||cl(s.en)===qc||cl(s.en)===cl(qc));
+  if(direct)return{s:direct,corrected:null};
+  for(const[alias,name]of Object.entries(ALIASES)){if(alias===qc||alias.startsWith(qc)||qc.startsWith(alias)){const f=SURAHS.find(x=>x.en===name);if(f)return{s:f,corrected:name};}}
+  let best=null,bestScore=Infinity;
+  const targets=[...SURAHS.map(s=>({s,key:s.en.toLowerCase()})),...SURAHS.map(s=>({s,key:cl(s.en)})),...Object.entries(ALIASES).map(([k,v])=>({alias:k,target:v}))];
+  for(const item of targets){const key=item.key||item.alias;const dist=lev(qc,key);const thresh=Math.max(2,Math.floor(key.length*0.38));if(dist<bestScore&&dist<=thresh){bestScore=dist;if(item.s)best={s:item.s,corrected:item.s.en};else{const f=SURAHS.find(x=>x.en===item.target);if(f)best={s:f,corrected:f.en};}}}
+  return best;
+}
+
+function switchTab(t,el){
+  curTab=t;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  ['tilawat','read','para'].forEach(id=>{document.getElementById('tab-'+id).style.display=id===t?'block':'none';});
+}
+
+// ─── TILAWAT ──────────────────────────────────────────────────────────────────
+function go(){
+  const val=document.getElementById('inp').value.trim();
+  const area=document.getElementById('tarea');
+  if(!val){area.innerHTML='';return;}
+  area.innerHTML='<div class="loading-ayah"><div class="dots"><span></span><span></span><span></span></div></div>';
+  setTimeout(()=>{const r=findS(val);renderTilawat(r,val,area);},300);
+}
+
+function renderTilawat(result,input,area){
+  if(!result||!result.s){
+    area.innerHTML=`<div class="err-card"><div style="font-size:14px;font-weight:600;color:#A32D2D">No Surah found for "${input}"</div><div style="font-size:12px;color:var(--txt2);margin-top:4px">Try: Fatiha, Yaseen, Rahman, Mulk, Baqarah...</div></div>`;
+    return;
+  }
+  const{s,corrected}=result;
+  const isC=corrected&&s.en.toLowerCase()!==input.toLowerCase();
+  const src=mp3url(reciter,s.n);
+
+  area.innerHTML=`<div class="panel">
+    <div class="panel-hdr">
+      <div class="snum">${s.n}</div>
+      <div class="sinfo">
+        <div><span class="sen">${s.en}</span><span class="sar">${s.ar}</span></div>
+        <div class="smeta">${s.t} · ${s.v} verses · Para ${s.p}</div>
+      </div>
+    </div>
+    ${isC?`<div class="correction">Showing <strong>${s.en}</strong> (corrected from "${input}")</div>`:''}
+
+    <div class="audio-panel">
+      <div class="audio-title">
+        <span id="audio-pulse" class="stopped"></span>
+        🎙️ ${RECITERS[reciter].name} — ${s.en}
+      </div>
+      <div class="reciter-tabs">
+        ${Object.entries(RECITERS).map(([k,v])=>`<button class="rtab ${k===reciter?'on':''}" onclick="changeReciter('${k}',${s.n})">${v.name}</button>`).join('')}
+      </div>
+      <audio id="mainAudio" controls autoplay preload="none"
+        src="${src}"
+        onplay="document.getElementById('audio-pulse').classList.remove('stopped')"
+        onpause="document.getElementById('audio-pulse').classList.add('stopped')"
+        onended="document.getElementById('audio-pulse').classList.add('stopped')">
+      </audio>
+      <div class="audio-note">📡 Audio streams on this page · No redirect</div>
+    </div>
+  </div>`;
+}
+
+function changeReciter(r,surahN){
+  reciter=r;
+  const s=SURAHS.find(x=>x.n===surahN);
+  if(!s)return;
+  const audio=document.getElementById('mainAudio');
+  const pulse=document.getElementById('audio-pulse');
+  if(audio){
+    audio.src=mp3url(r,surahN);
+    audio.play().catch(()=>{});
+    if(pulse)pulse.classList.remove('stopped');
+  }
+  document.querySelectorAll('.rtab').forEach(b=>{
+    b.classList.toggle('on', b.textContent===RECITERS[r].name);
+  });
+  // update title
+  const titleEl=document.querySelector('.audio-title');
+  if(titleEl) titleEl.innerHTML=`<span id="audio-pulse"></span> 🎙️ ${RECITERS[r].name} — ${s.en}`;
+}
+
+// ─── READ ─────────────────────────────────────────────────────────────────────
+function goRead(){
+  const val=document.getElementById('rinp').value.trim();
+  const area=document.getElementById('rarea');
+  if(!val){area.innerHTML='';return;}
+  area.innerHTML='<div class="loading-ayah"><div class="dots"><span></span><span></span><span></span></div></div>';
+  setTimeout(()=>{const r=findS(val);renderRead(r,val,area);},300);
+}
+
+function renderRead(result,input,area){
+  if(!result||!result.s){
+    area.innerHTML=`<div class="err-card"><div style="font-size:14px;font-weight:600;color:#A32D2D">No Surah found for "${input}"</div><div style="font-size:12px;color:var(--txt2);margin-top:4px">Try: Fatiha, Yaseen, Rahman, Mulk, Baqarah...</div></div>`;
+    return;
+  }
+  const{s,corrected}=result;
+  const isC=corrected&&s.en.toLowerCase()!==input.toLowerCase();
+  showLang={ar:true,en:true,ur:false};
+  area.innerHTML=`<div class="panel" id="readpanel">
+    <div class="panel-hdr">
+      <div class="snum">${s.n}</div>
+      <div class="sinfo">
+        <div><span class="sen">${s.en}</span><span class="sar">${s.ar}</span></div>
+        <div class="smeta">${s.t} · ${s.v} verses · Para ${s.p}</div>
+      </div>
+    </div>
+    ${isC?`<div class="correction">Showing <strong>${s.en}</strong> (corrected from "${input}")</div>`:''}
+    <div class="row-bar">
+      <span class="row-label">Translation:</span>
+      <button class="pill on" id="btn-ar-${s.n}" onclick="togLang('ar',${s.n})">Arabic</button>
+      <button class="pill on" id="btn-en-${s.n}" onclick="togLang('en',${s.n})">English</button>
+      <button class="pill" id="btn-ur-${s.n}" onclick="togLang('ur',${s.n})">Urdu اردو</button>
+    </div>
+    <div id="ayahs-${s.n}"><div class="loading-ayah"><div class="dots"><span></span><span></span><span></span></div></div></div>
+  </div>`;
+  loadAyahs(s);
+}
+
+// Multiple API sources — tries each in order until one works
+const API_SOURCES=[
+  (n)=>`https://api.alquran.cloud/v1/surah/${n}`,
+  (n)=>`https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/chapters/${n}.json`,
+  (n)=>`https://quranapi.pages.dev/api/${n}.json`,
+];
+const EN_SOURCES=[
+  (n)=>`https://api.alquran.cloud/v1/surah/${n}/en.asad`,
+  (n)=>`https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/chapters/en/${n}.json`,
+];
+const UR_SOURCES=[
+  (n)=>`https://api.alquran.cloud/v1/surah/${n}/ur.jalandhry`,
+  (n)=>`https://cdn.jsdelivr.net/npm/quran-json@3.1.2/dist/chapters/ur/${n}.json`,
+];
+
+async function tryFetch(sources,n){
+  for(const src of sources){
+    try{
+      const r=await fetch(src(n));
+      if(!r.ok)continue;
+      const d=await r.json();
+      // Normalize different response shapes into array of {text}
+      if(d.data&&d.data.ayahs) return d.data.ayahs; // alquran.cloud
+      if(Array.isArray(d)) return d.map(v=>({text:v.text||v.translation||v})); // quran-json chapters
+      if(d.verses) return d.verses.map(v=>({text:v.text||v.translation})); // quranapi.pages.dev
+      if(d.chapter) return d.chapter.map(v=>({text:v.text||v}));
+    }catch(e){continue;}
+  }
+  return null;
+}
+
+async function loadAyahs(s){
+  const container=document.getElementById(`ayahs-${s.n}`);
+  if(!container)return;
+  container.innerHTML='<div class="loading-ayah"><div class="dots"><span></span><span></span><span></span></div></div>';
+  try{
+    const [ayahs,enAyahs,urAyahs]=await Promise.all([
+      tryFetch(API_SOURCES,s.n),
+      tryFetch(EN_SOURCES,s.n),
+      tryFetch(UR_SOURCES,s.n),
+    ]);
+    if(!ayahs) throw new Error('no source worked');
+    container._arAyahs=ayahs;
+    container._enAyahs=enAyahs||ayahs.map(()=>({text:''}));
+    container._urAyahs=urAyahs||ayahs.map(()=>({text:''}));
+    renderAyahsInto(container,container._arAyahs,container._enAyahs,container._urAyahs);
+  }catch(e){
+    container.innerHTML=`<div style="padding:1.5rem;text-align:center">
+      <div style="font-size:28px;margin-bottom:.5rem">⚠️</div>
+      <div style="font-size:13px;font-weight:600;color:var(--txt)">Could not load</div>
+      <div style="font-size:11px;color:var(--txt2);margin-top:4px">On GitHub Pages this works perfectly ✓</div>
+      <button onclick="loadAyahs(SURAHS.find(x=>x.n==${s.n}))" style="margin-top:10px;padding:6px 16px;background:var(--g);color:#fff;border:none;border-radius:8px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer">🔄 Retry</button>
+    </div>`;
+  }
+}
+
+function renderAyahsInto(container,ayahs,enAyahs,urAyahs){
+  let html='';
+  for(let i=0;i<ayahs.length;i++){
+    html+=`<div class="ayah-box">
+      <div class="ayah-num">﴿ ${i+1} ﴾</div>
+      ${showLang.ar?`<div class="ayah-ar">${ayahs[i].text}</div>`:''}
+      ${showLang.en?`<div class="ayah-en">${enAyahs[i]?.text||''}</div>`:''}
+      ${showLang.ur?`<div class="ayah-ur">${urAyahs[i]?.text||''}</div>`:''}
+    </div>`;
+  }
+  container.innerHTML=html||'<div style="padding:1rem;text-align:center;font-size:12px;color:var(--txt2)">Turn on at least one language above ☝️</div>';
+}
+
+function togLang(l,surahN){
+  showLang[l]=!showLang[l];
+  const btn=document.getElementById(`btn-${l}-${surahN}`);
+  if(btn)btn.classList.toggle('on',showLang[l]);
+  const container=document.getElementById(`ayahs-${surahN}`);
+  if(container&&container._arAyahs){
+    renderAyahsInto(container,container._arAyahs,container._enAyahs,container._urAyahs);
+  }
+}
+
+// ─── PARA TAB ─────────────────────────────────────────────────────────────────
+let paraShowLang={ar:true,en:true,ur:false};
+let openParaSurahN=null;
+
+function buildParaGrid(){
+  const grid=document.getElementById('paragrid');
+  PARAS.forEach(p=>{
+    const card=document.createElement('div');
+    card.className='para-card';
+    card.id=`pc-${p.n}`;
+    card.innerHTML=`<div class="para-num">${p.n}</div><div class="para-ar">${p.ar}</div><div class="para-info">${p.name}</div>`;
+    card.onclick=()=>showPara(p);
+    grid.appendChild(card);
+  });
+}
+
+function showPara(p){
+  document.querySelectorAll('.para-card').forEach(c=>c.classList.remove('on'));
+  document.getElementById(`pc-${p.n}`).classList.add('on');
+  const area=document.getElementById('paraarea');
+  const surahsInPara=SURAHS.filter(s=>p.surahs.includes(s.n));
+  area.innerHTML=`<div class="panel">
+    <div class="panel-hdr">
+      <div class="snum" style="font-size:11px">${p.n}</div>
+      <div class="sinfo">
+        <div><span class="sen">Para ${p.n} — ${p.name}</span><span class="sar">${p.ar}</span></div>
+        <div class="smeta">Starts from ${p.from} · ${surahsInPara.length} Surah(s)</div>
+      </div>
+    </div>
+
+    <!-- TRANSLATION OPTIONS FOR PARA -->
+    <div class="row-bar" style="background:#f0f9f5;border-top:.5px solid var(--border);border-bottom:.5px solid var(--border);padding:.5rem 1rem">
+      <span class="row-label">Translation:</span>
+      <button class="pill ${paraShowLang.ar?'on':''}" onclick="togParaLang('ar')">Arabic</button>
+      <button class="pill ${paraShowLang.en?'on':''}" onclick="togParaLang('en')">English</button>
+      <button class="pill ${paraShowLang.ur?'on':''}" onclick="togParaLang('ur')">Urdu اردو</button>
+    </div>
+
+    <div class="para-view">
+      <div class="ql" style="margin-bottom:8px">Surahs in this Para — tap to read with translation</div>
+      <div class="para-surah-list" id="para-surah-list-${p.n}">
+        ${surahsInPara.map(s=>`
+          <div class="para-surah-item" id="psi-${s.n}" onclick="openParaSurah(${s.n},${p.n})">
+            <div class="psi-num">${s.n}</div>
+            <div style="flex:1"><div class="psi-name">${s.en}</div><div class="psi-meta">${s.t} · ${s.v} verses</div></div>
+            <div class="psi-ar">${s.ar}</div>
+          </div>
+          <div id="para-inline-${s.n}" style="display:none"></div>
+        `).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function togParaLang(l){
+  paraShowLang[l]=!paraShowLang[l];
+  event.target.classList.toggle('on',paraShowLang[l]);
+  if(openParaSurahN){
+    const container=document.getElementById(`para-ayahs-${openParaSurahN}`);
+    if(container&&container._arAyahs) renderParaAyahs(container);
+  }
+}
+
+function openParaSurah(surahN,paraN){
+  const s=SURAHS.find(x=>x.n===surahN);
+  if(!s)return;
+  // Toggle: close if already open
+  if(openParaSurahN===surahN){
+    document.getElementById(`para-inline-${surahN}`).style.display='none';
+    openParaSurahN=null;
+    return;
+  }
+  // Close previous
+  if(openParaSurahN){
+    document.getElementById(`para-inline-${openParaSurahN}`).style.display='none';
+  }
+  openParaSurahN=surahN;
+  const inlineDiv=document.getElementById(`para-inline-${surahN}`);
+  inlineDiv.style.display='block';
+  inlineDiv.innerHTML=`<div class="para-inline-read">
+    <div class="pir-hdr">
+      <div class="pir-title">${s.en} — ${s.ar}</div>
+      <button class="pir-close" onclick="document.getElementById('para-inline-${surahN}').style.display='none';openParaSurahN=null">✕</button>
+    </div>
+    <div id="para-ayahs-${surahN}"><div class="loading-ayah"><div class="dots"><span></span><span></span><span></span></div></div></div>
+  </div>`;
+  loadParaInlineAyahs(s);
+}
+
+async function loadParaInlineAyahs(s){
+  const container=document.getElementById(`para-ayahs-${s.n}`);
+  if(!container)return;
+  container.innerHTML='<div class="loading-ayah"><div class="dots"><span></span><span></span><span></span></div></div>';
+  try{
+    const [ayahs,enAyahs,urAyahs]=await Promise.all([
+      tryFetch(API_SOURCES,s.n),
+      tryFetch(EN_SOURCES,s.n),
+      tryFetch(UR_SOURCES,s.n),
+    ]);
+    if(!ayahs) throw new Error('no source');
+    container._arAyahs=ayahs;
+    container._enAyahs=enAyahs||ayahs.map(()=>({text:''}));
+    container._urAyahs=urAyahs||ayahs.map(()=>({text:''}));
+    renderParaAyahs(container);
+  }catch(e){
+    container.innerHTML=`<div style="padding:1.5rem;text-align:center">
+      <div style="font-size:13px;font-weight:600;color:var(--txt)">Could not load</div>
+      <button onclick="loadParaInlineAyahs(SURAHS.find(x=>x.n==${s.n}))" style="margin-top:10px;padding:6px 16px;background:var(--g);color:#fff;border:none;border-radius:8px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer">🔄 Retry</button>
+    </div>`;
+  }
+}
+
+function renderParaAyahs(container){
+  if(!container._arAyahs)return;
+  const {_arAyahs:a,_enAyahs:e,_urAyahs:u}=container;
+  let html='';
+  for(let i=0;i<a.length;i++){
+    html+=`<div class="ayah-box">
+      <div class="ayah-num">﴿ ${i+1} ﴾</div>
+      ${paraShowLang.ar?`<div class="ayah-ar">${a[i].text}</div>`:''}
+      ${paraShowLang.en?`<div class="ayah-en">${e[i]?.text||''}</div>`:''}
+      ${paraShowLang.ur?`<div class="ayah-ur">${u[i]?.text||''}</div>`:''}
+    </div>`;
+  }
+  container.innerHTML=html||'<div style="padding:1rem;text-align:center;font-size:12px;color:var(--txt2)">Turn on at least one language above ☝️</div>';
+}
+
+function openSurahFromPara(n){
+  const s=SURAHS.find(x=>x.n===n);
+  if(!s)return;
+  switchTab('tilawat',document.querySelectorAll('.tab')[0]);
+  document.getElementById('inp').value=s.en;
+  go();
+}
+
+// ─── QUICK BTNS ───────────────────────────────────────────────────────────────
+const QUICK=[1,36,55,56,67,18,112,78,97,93,114,113];
+const qb=document.getElementById('qbtns');
+QUICK.forEach(n=>{
+  const s=SURAHS.find(x=>x.n===n);if(!s)return;
+  const b=document.createElement('button');b.className='qbtn';
+  b.textContent=s.en.replace(/^(Al|An|At|As|Az|Ad|Ar|Ash)-/,'');
+  b.onclick=()=>{document.getElementById('inp').value=s.en;go();};
+  qb.appendChild(b);
+});
+const rb=document.getElementById('rbtns');
+[18,36,55,56,67,112,97,93,2,3].forEach(n=>{
+  const s=SURAHS.find(x=>x.n===n);if(!s)return;
+  const b=document.createElement('button');b.className='qbtn';
+  b.textContent=s.en.replace(/^(Al|An|At|As|Az|Ad|Ar|Ash)-/,'');
+  b.onclick=()=>{document.getElementById('rinp').value=s.en;goRead();};
+  rb.appendChild(b);
+});
+
+document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')go();});
+document.getElementById('rinp').addEventListener('keydown',e=>{if(e.key==='Enter')goRead();});
+buildParaGrid();
+</script>
+<footer class="site-footer">
+  <div class="footer-built">Built with ❤️ by</div>
+  <a class="footer-name" href="https://portfolio-erenn.vercel.app/" target="_blank">
+    EREN 𒉭 — Mohammad Hammad
+  </a>
+  <div class="footer-links">
+    <a class="footer-link" href="https://github.com/erenyeager-11" target="_blank">GitHub</a>
+    <span style="color:var(--border)">·</span>
+    <a class="footer-link" href="https://instagram.com/hamnerdd" target="_blank">Instagram</a>
+    <span style="color:var(--border)">·</span>
+    <a class="footer-link" href="mailto:hammadpvt.2@gmail.com">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 · New Delhi, India</div>
+</footer>
+</body>
+</html>
