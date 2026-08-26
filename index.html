@@ -432,16 +432,42 @@ const NO_BISMILLAH_SURAHS = [9]; // At-Tawbah has no Bismillah
 const BISMILLAH_TEXT = "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ";
 
 /**
- * Detects whether ayah[0] from the API is the standalone Bismillah header
- * (for surahs other than Al-Fatiha where it's part of the surah itself).
- * The API returns Bismillah as ayah 1 for most surahs.
+ * Detects & strips a Bismillah prefix from an ayah's Arabic text.
+ * Handles BOTH cases seen across different Quran APIs:
+ *  1) ayah[0] is Bismillah ONLY (standalone) — rest comes back empty, so we skip it.
+ *  2) ayah[0] is Bismillah + verse-1 TEXT COMBINED (common on alquran.cloud) —
+ *     rest comes back with the actual verse-1 text, Bismillah prefix stripped out,
+ *     so verse 1 never shows the Bismillah words twice.
+ * Uses diacritic-insensitive matching since different APIs encode the harakat differently.
  */
-function isBismillahAyah(surahN, text) {
-  if (surahN === 1) return false; // In Al-Fatiha, verse 1 IS the Bismillah — keep it numbered
-  if (NO_BISMILLAH_SURAHS.includes(surahN)) return false;
-  if (!text) return false;
-  // The API bismillah text contains بسم الله الرحمن الرحيم
-  return text.includes('بِسْمِ') && text.includes('اللَّهِ') && text.includes('الرَّحْمَٰنِ');
+function normalizeArabic(s) {
+  return s
+    .replace(/\u0671/g, '\u0627') // alif-wasla → plain alif
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED\u08F0-\u08FF]/g, ''); // strip harakat/tajweed marks
+}
+const BISMILLAH_NORM = normalizeArabic("بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ");
+
+function splitBismillahPrefix(surahN, text) {
+  if (!text) return { has: false, rest: text };
+  if (surahN === 1) return { has: false, rest: text }; // Al-Fatiha ayah 1 IS the Bismillah — keep numbered
+  if (NO_BISMILLAH_SURAHS.includes(surahN)) return { has: false, rest: text }; // At-Tawbah — no Bismillah at all
+
+  // Build a normalized copy of the text while tracking each normalized char's original index
+  let normalized = '';
+  const indexMap = [];
+  const markRe = /[\u064B-\u065F\u0670\u06D6-\u06ED\u08F0-\u08FF]/;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (markRe.test(ch)) continue;
+    normalized += (ch === '\u0671') ? '\u0627' : ch;
+    indexMap.push(i);
+  }
+
+  if (!normalized.startsWith(BISMILLAH_NORM)) return { has: false, rest: text };
+
+  const cutOrigIdx = (BISMILLAH_NORM.length < indexMap.length) ? indexMap[BISMILLAH_NORM.length] : text.length;
+  const rest = text.slice(cutOrigIdx).trim();
+  return { has: true, rest };
 }
 
 /** Renders the styled Bismillah header, clearly separated from the surah's ayahs below */
@@ -635,10 +661,10 @@ async function loadAyahs(s){
 }
 
 /**
- * FIXED: renderAyahsInto
- * — Detects if ayah[0] is the standalone Bismillah
- * — If yes: renders it as a centred Bismillah header followed by a Ruku divider,
- *   then continues with the remaining ayahs numbered from 1.
+ * renderAyahsInto
+ * — Splits any Bismillah prefix out of ayah[0] (handles both standalone-ayah
+ *   and combined-with-verse-1 API formats) and renders it once as a clean header.
+ * — Verse 1's own text (bismillah stripped) is shown normally as ﴿ 1 ﴾ — never duplicated.
  * — Al-Fatiha (surah 1) is treated normally (verse 1 IS the Bismillah).
  * — At-Tawbah (surah 9) has no Bismillah header.
  */
@@ -646,30 +672,32 @@ function renderAyahsInto(container, ayahs, enAyahs, urAyahs){
   const surahN = container._surahN || 0;
   let html = '';
   let startIdx = 0; // which index to start numbering from in the loop
+  let displayAyahs = ayahs;
 
-  // Detect if the first ayah returned by the API is the Bismillah header
   const firstText = ayahs[0]?.text || '';
-  const hasBismillahHeader = isBismillahAyah(surahN, firstText);
+  const split = splitBismillahPrefix(surahN, firstText);
 
-  if (hasBismillahHeader) {
-    // Render Bismillah as a special header (not a numbered ayah)
-    html += bismillahSepHTML(showLang.ar ? firstText : null);
-    startIdx = 1; // skip ayah[0] from the numbered loop
-  } else if (surahN !== 9 && surahN !== 0) {
-    // Surah has Bismillah but API didn't include it — show static Bismillah header
-    // (this handles edge cases from some API sources)
-    // Only add if it's not At-Tawbah and not Al-Fatiha (1) where verse 1 IS bismillah
-    if (surahN !== 1) {
-      html += bismillahSepHTML(null);
+  if (split.has) {
+    html += bismillahSepHTML(showLang.ar ? BISMILLAH_TEXT : null);
+    if (split.rest) {
+      // Bismillah was concatenated onto verse 1's text — strip it, keep verse 1 as ayah 1
+      displayAyahs = ayahs.slice();
+      displayAyahs[0] = { ...displayAyahs[0], text: split.rest };
+    } else {
+      // Bismillah was its own standalone entry — skip it from the numbered loop
+      startIdx = 1;
     }
+  } else if (surahN !== 9 && surahN !== 0 && surahN !== 1) {
+    // API didn't include Bismillah text at all — show a static header anyway
+    html += bismillahSepHTML(null);
   }
 
   // Render remaining ayahs with sequential display numbers
-  for(let i = startIdx; i < ayahs.length; i++){
+  for(let i = startIdx; i < displayAyahs.length; i++){
     const displayNum = i - startIdx + 1; // always 1, 2, 3...
     html += `<div class="ayah-box">
       <div class="ayah-num">﴿ ${displayNum} ﴾</div>
-      ${showLang.ar ? `<div class="ayah-ar">${ayahs[i].text}</div>` : ''}
+      ${showLang.ar ? `<div class="ayah-ar">${displayAyahs[i].text}</div>` : ''}
       ${showLang.en ? `<div class="ayah-en">${enAyahs[i]?.text || ''}</div>` : ''}
       ${showLang.ur ? `<div class="ayah-ur">${urAyahs[i]?.text || ''}</div>` : ''}
     </div>`;
@@ -799,29 +827,35 @@ async function loadParaInlineAyahs(s){
 }
 
 /**
- * FIXED: renderParaAyahs — same Bismillah/ruku logic as renderAyahsInto
+ * renderParaAyahs — same Bismillah-splitting logic as renderAyahsInto
  */
 function renderParaAyahs(container){
   if(!container._arAyahs)return;
   const {_arAyahs:a, _enAyahs:e, _urAyahs:u, _surahN:surahN} = container;
   let html = '';
   let startIdx = 0;
+  let displayA = a;
 
   const firstText = a[0]?.text || '';
-  const hasBismillahHeader = isBismillahAyah(surahN || 0, firstText);
+  const split = splitBismillahPrefix(surahN || 0, firstText);
 
-  if (hasBismillahHeader) {
-    html += bismillahSepHTML(paraShowLang.ar ? firstText : null);
-    startIdx = 1;
+  if (split.has) {
+    html += bismillahSepHTML(paraShowLang.ar ? BISMILLAH_TEXT : null);
+    if (split.rest) {
+      displayA = a.slice();
+      displayA[0] = { ...displayA[0], text: split.rest };
+    } else {
+      startIdx = 1;
+    }
   } else if (surahN && surahN !== 9 && surahN !== 1) {
     html += bismillahSepHTML(null);
   }
 
-  for(let i = startIdx; i < a.length; i++){
+  for(let i = startIdx; i < displayA.length; i++){
     const displayNum = i - startIdx + 1;
     html += `<div class="ayah-box">
       <div class="ayah-num">﴿ ${displayNum} ﴾</div>
-      ${paraShowLang.ar ? `<div class="ayah-ar">${a[i].text}</div>` : ''}
+      ${paraShowLang.ar ? `<div class="ayah-ar">${displayA[i].text}</div>` : ''}
       ${paraShowLang.en ? `<div class="ayah-en">${e[i]?.text || ''}</div>` : ''}
       ${paraShowLang.ur ? `<div class="ayah-ur">${u[i]?.text || ''}</div>` : ''}
     </div>`;
