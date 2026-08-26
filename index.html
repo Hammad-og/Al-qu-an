@@ -94,35 +94,28 @@ audio::-webkit-media-controls-panel{background:var(--gl)}
 /* BISMILLAH HEADER (shown between surah title and ayah 1) */
 .bismillah-header{
   text-align:center;
-  padding:1rem 1rem .5rem;
+  padding:1rem 1rem .6rem;
   font-family:'Amiri Quran',serif;
   font-size:28px;
   direction:rtl;
   color:var(--gd);
   line-height:2;
-  border-bottom:.5px solid var(--border);
 }
 
-/* RUKU DIVIDER — shown after Bismillah before verse 1 */
-.ruku-divider{
+/* Simple honest separator between Bismillah and the surah's ayahs
+   (no fake "Ruku" label — real ruku divisions aren't tracked here) */
+.bismillah-sep{
   display:flex;
   align-items:center;
-  gap:10px;
-  padding:.45rem 1.1rem;
-  background:linear-gradient(90deg,var(--gl) 0%,#f0faf5 100%);
-  border-top:.5px solid var(--border);
+  justify-content:center;
+  padding:.35rem 1.1rem .6rem;
   border-bottom:.5px solid var(--border);
 }
-.ruku-line{flex:1;height:1px;background:linear-gradient(90deg,var(--g),transparent)}
-.ruku-line.right{background:linear-gradient(270deg,var(--g),transparent)}
-.ruku-badge{
-  display:flex;align-items:center;gap:5px;
-  background:var(--g);color:#fff;
-  font-family:'Amiri',serif;font-size:12px;font-weight:600;
-  padding:3px 12px;border-radius:20px;
-  letter-spacing:.03em;white-space:nowrap;
+.bismillah-sep-dot{
+  color:var(--g);
+  font-size:16px;
+  opacity:.7;
 }
-.ruku-badge .ruku-icon{font-size:14px}
 
 /* AYAH */
 .ayah-box{padding:.75rem 1rem;border-top:.5px solid var(--border)}
@@ -451,15 +444,11 @@ function isBismillahAyah(surahN, text) {
   return text.includes('بِسْمِ') && text.includes('اللَّهِ') && text.includes('الرَّحْمَٰنِ');
 }
 
-/** Renders the styled Bismillah header + ruku divider */
+/** Renders the styled Bismillah header, clearly separated from the surah's ayahs below */
 function bismillahSepHTML(bisText) {
   return `
     <div class="bismillah-header">${bisText || 'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ'}</div>
-    <div class="ruku-divider">
-      <div class="ruku-line"></div>
-      <div class="ruku-badge"><span class="ruku-icon">۞</span> Ruku 1 — Verse 1</div>
-      <div class="ruku-line right"></div>
-    </div>`;
+    <div class="bismillah-sep"><span class="bismillah-sep-dot">۞</span></div>`;
 }
 
 let reciter='mishary', showLang={ar:true,en:true,ur:false}, curTab='tilawat';
