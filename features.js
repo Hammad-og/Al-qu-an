@@ -16,7 +16,7 @@ trash:'<path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 
 rotate:'<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',play:'<polygon points="6 3 20 12 6 21 6 3"/>',
 info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',check:'<path d="M20 6 9 17l-5-5"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',
 mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/>',
-arrow:'<path d="M5 12h14M12 5l7 7-7 7"/>',heart:'<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',grid:'<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',home:'<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',quote:'<path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/>',alert:'<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/>'};
+arrow:'<path d="M5 12h14M12 5l7 7-7 7"/>',heart:'<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',grid:'<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',home:'<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',quote:'<path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/>',sliders:'<line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/>',monitor:'<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/>',alert:'<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/>'};
 const ic=n=>`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
 window.ic=ic;
 const dk=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -205,13 +205,21 @@ $('#bnav').onclick=e=>{const b=e.target.closest('[data-t]');b&&switchTab(b.datas
 ACT.more=()=>$('#more').classList.add('open');ACT.closemore=(e)=>{if(e.id==='more')$('#more').classList.remove('open')};
 ACT.mgo=(e,d)=>{$('#more').classList.remove('open');switchTab(d.t)};
 
-// ───────── Desktop right panel ─────────
-const rpEl=document.createElement('aside');rpEl.id='rp';document.body.append(rpEl);
-window.rp=async()=>{const l=LS.g('last'),ln=LS.g('lastl'),A=l&&SURAHS.find(x=>x.n==l.s),B=ln&&SURAHS.find(x=>x.n==ln);
- rpEl.innerHTML=`<div class="rp-h"><small>Salam,</small><b>${hijTxt(new Date())}</b></div>
- <div class="rp-i"><div><small>LAST READ</small><b>${A?A.en:'Not started'}</b>${l?`<span>Ayah ${l.a}</span>`:''}</div><button class="ibtn" data-act="open" data-s="${l?l.s:1}" data-a="${l?l.a:1}" aria-label="Continue reading">${ic('book-open')}</button></div>
+// ───────── Options drawer: theme + last read / listened / ayah of the day ─────────
+const mq=matchMedia('(prefers-color-scheme:dark)');
+const theme=v=>{if(v)LS.s('theme',v);const t=LS.g('theme','auto'),d=t==='auto'?(mq.matches?'dark':'light'):t;document.documentElement.dataset.theme=d;const m=$('meta[name=theme-color]');m&&m.setAttribute('content',d==='dark'?'#0d1a15':'#1D9E75');$$('#thm button').forEach(x=>x.classList.toggle('on',x.dataset.v===t))};
+document.body.insertAdjacentHTML('beforeend',`<button id="opt" data-act="opt" aria-label="Options">${ic('sliders')}</button><div id="rpb" data-act="optclose"></div>
+<aside id="rp" aria-label="Options"><div class="rp-top"><b>Options</b><button class="ibtn" data-act="optclose" aria-label="Close">${ic('x')}</button></div>
+<div><div class="lab">Appearance</div><div class="seg" id="thm">${[['light','sun','Day'],['dark','moon','Night'],['auto','monitor','Auto']].map(([v,i,l])=>`<button data-act="theme" data-v="${v}">${ic(i)} ${l}</button>`).join('')}</div></div><div id="rp-body"></div></aside>`);
+ACT.theme=(e,d)=>theme(d.v);mq.addEventListener&&mq.addEventListener('change',()=>theme());
+ACT.opt=()=>{document.body.classList.add('opt-open');rp()};ACT.optclose=()=>document.body.classList.remove('opt-open');
+document.addEventListener('keydown',e=>{if(e.key==='Escape')ACT.optclose()});
+['open','listen'].forEach(k=>{const o=ACT[k];ACT[k]=(e,d)=>{ACT.optclose();o(e,d)}});
+window.rp=async()=>{if(!document.body.classList.contains('opt-open'))return;const l=LS.g('last'),ln=LS.g('lastl'),A=l&&SURAHS.find(x=>x.n==l.s),B=ln&&SURAHS.find(x=>x.n==ln);
+ $('#rp-body').innerHTML=`<div class="rp-i"><div><small>LAST READ</small><b>${A?A.en:'Not started'}</b>${l?`<span>Ayah ${l.a}</span>`:''}</div><button class="ibtn" data-act="open" data-s="${l?l.s:1}" data-a="${l?l.a:1}" aria-label="Continue reading">${ic('book-open')}</button></div>
  <div class="rp-i"><div><small>LAST LISTENED</small><b>${B?B.en:'—'}</b></div><button class="ibtn" data-act="listen" data-n="${B?B.n:1}" aria-label="Listen">${ic('headphones')}</button></div>
  <div class="rp-g" id="rp-a"><small>AYAH OF THE DAY</small></div>`;
- if(innerWidth<1200)return;try{const r=AYAHS[doy%AYAHS.length],o=await getAyah(r),m=r.split(':');$('#rp-a').innerHTML=`<small>AYAH OF THE DAY</small><p>${esc(o.en)}</p><span>${esc(o.ref)}</span><button class="rp-n" data-act="open" data-s="${m[0]}" data-a="${m[1]}">Go to ayah ${ic('arrow')}</button>`}catch(e){}};
+ try{const r=AYAHS[doy%AYAHS.length],o=await getAyah(r),m=r.split(':');$('#rp-a').innerHTML=`<small>AYAH OF THE DAY</small><p>${esc(o.en)}</p><span>${esc(o.ref)}</span><button class="rp-n" data-act="open" data-s="${m[0]}" data-a="${m[1]}">Go to ayah ${ic('arrow')}</button>`}catch(e){}};
+theme();
 switchTab('today');
 })();
