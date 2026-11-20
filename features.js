@@ -16,7 +16,7 @@ trash:'<path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 
 rotate:'<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>',play:'<polygon points="6 3 20 12 6 21 6 3"/>',
 info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',check:'<path d="M20 6 9 17l-5-5"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',
 mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/>',
-alert:'<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/>'};
+arrow:'<path d="M5 12h14M12 5l7 7-7 7"/>',heart:'<path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>',grid:'<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',home:'<path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',quote:'<path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/><path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z"/>',alert:'<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/>'};
 const ic=n=>`<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
 window.ic=ic;
 const dk=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -28,12 +28,12 @@ const fmt=(d,o)=>d.toLocaleDateString('en',o);
 window.tawbahNote=()=>`<div class="tawbah-note">${ic('info')}<span>Surah At-Tawbah is the only surah that begins without Bismillah. It is not recited at the beginning of this Surah.</span></div>`;
 
 // ───────── Navigation ─────────
-const TABS=[['tilawat','headphones','Tilawat'],['read','book-open','Read'],['para','layers','Paras'],['today','sun','Today'],['plan','calendar-check','Planner'],['journal','pen','Journal'],['taqwim','moon','Taqwim'],['tasbeeh','target','Tasbeeh'],['saved','bookmark','Saved']];
+const TABS=[['today','home','Home'],['read','book-open','Read'],['tilawat','headphones','Listen'],['para','layers','Paras'],['plan','calendar-check','Planner'],['journal','pen','Journal'],['taqwim','moon','Taqwim'],['tasbeeh','target','Tasbeeh'],['saved','bookmark','Saved']],SEC=['para','journal','taqwim','tasbeeh','saved'];
 const R={};
 const tabsEl=$('#tabs');
-tabsEl.innerHTML=TABS.map(([id,i,l])=>`<button class="tab${id==='tilawat'?' on':''}" data-t="${id}">${ic(i)}<span>${l}</span></button>`).join('');
+tabsEl.innerHTML='<div class="logo">'+ic('book-open')+'</div>'+TABS.map(([id,i,l])=>`<button class="tab${id==='today'?' on':''}" data-t="${id}">${ic(i)}<span>${l}</span></button>`).join('');
 ['saved','tasbeeh','taqwim','journal','plan','today'].forEach(id=>{const d=document.createElement('div');d.id='tab-'+id;d.style.display='none';$('#tab-para').after(d)});
-window.switchTab=t=>{$$('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));TABS.forEach(([id])=>{$('#tab-'+id).style.display=id===t?'block':'none'});R[t]&&R[t]();const b=$('.tab.on');b&&tabsEl.scrollTo({left:b.offsetLeft-tabsEl.clientWidth/2+b.clientWidth/2,behavior:'smooth'})};
+window.switchTab=t=>{$$('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));$$('#bnav [data-t]').forEach(b=>b.classList.toggle('on',b.dataset.t===t));const mb=$('#bnav [data-act=more]');mb&&mb.classList.toggle('on',SEC.includes(t));TABS.forEach(([id])=>{$('#tab-'+id).style.display=id===t?'block':'none'});R[t]&&R[t]();window.scrollTo({top:0});window.rp&&rp()};
 tabsEl.onclick=e=>{const b=e.target.closest('.tab');b&&switchTab(b.dataset.t)};
 const ACT={};
 document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(el&&ACT[el.dataset.act])ACT[el.dataset.act](el,el.dataset)});
@@ -73,12 +73,15 @@ ACT.save=(el,d)=>{let a=sv();const i=a.findIndex(x=>x.id===d.id);i>-1?a.splice(i
 ACT.share=async(el,d)=>{const o=IT[d.id];const t=[o.ar,o.en,'— '+o.ref].filter(Boolean).join('\n\n');try{if(navigator.share)await navigator.share({text:t});else{await navigator.clipboard.writeText(t);const b=$('b',el)||el;const old=el.innerHTML;el.innerHTML=ic('check')+'Copied';setTimeout(()=>el.innerHTML=old,1400)}}catch(e){}};
 const fail=(id,l)=>`<div class="card"><div class="lab">${l}</div><p class="muted">Could not load right now. Please check your connection.</p><div class="acts"><button class="btn sm ghost" data-act="retry">${ic('rotate')}Retry</button></div></div>`;
 ACT.retry=()=>R.today();
-R.today=async()=>{const el=$('#tab-today'),l=LS.g('last'),now=new Date();let cont='';
- if(l){const S=SURAHS.find(x=>x.n==l.s);cont=`<div class="card hero"><div class="lab">Continue reading</div><h2>${S.en} · Ayah ${l.a}</h2><p>${S.ar} — pick up where you left off</p><button class="btn" data-act="open" data-s="${l.s}" data-a="${l.a}">${ic('play')}Continue</button></div>`}
- else cont=`<div class="card hero"><div class="lab">Assalamu alaikum</div><h2>${fmt(now,{weekday:'long'})}</h2><p>Open any Surah in Read — your place is remembered automatically.</p></div>`;
- el.innerHTML=cont.replace('</p>',`</p><p>${hijTxt(now)} · ${fmt(now,{day:'numeric',month:'long',year:'numeric'})}</p>`).replace(/<p>([^<]*)<\/p><p>/,'<p>$1</p><p style="margin-top:2px">')+sh('Today','Quran and Hadith text is fetched from verified sources — never AI-written')+'<div id="d1"></div><div id="d2"></div><div id="d3"></div>';
+const dark=(id,label,o)=>{IT[id]={...o,label};const sd=isSv(id),m=o.ref.match(/\((\d+):(\d+)\)/);return`<div class="card dk"><div class="q">${ic('quote')}</div><div class="lab">${label}</div><div class="ar-t">${esc(o.ar)}</div><p class="en-t">${esc(o.en)}</p><div class="ref">${esc(o.ref)}</div><div class="acts"><button class="sqb${sd?' on':''}" data-act="save" data-id="${esc(id)}" aria-label="Save">${ic('bookmark')}<b hidden>${sd?'Saved':'Save'}</b></button><button class="sqb" data-act="share" data-id="${esc(id)}" aria-label="Share">${ic('share')}</button></div>${m?`<button class="goto" data-act="open" data-s="${m[1]}" data-a="${m[2]}">Go to ayah ${ic('arrow')}</button>`:''}</div>`};
+ACT.go=(e,d)=>switchTab(d.t);
+R.today=()=>{const el=$('#tab-today'),l=LS.g('last'),now=new Date(),S=l&&SURAHS.find(x=>x.n==l.s);
+ el.innerHTML=`<div class="greet"><h1>Assalamu alaikum</h1><p>${hijTxt(now)} · ${fmt(now,{weekday:'long',day:'numeric',month:'long'})}</p></div>
+ <button class="lr" data-act="open" data-s="${l?l.s:1}" data-a="${l?l.a:1}"><div><small>${l?'Last read':'Start reading'}</small><b>${S?S.en:'Al-Fatiha'}</b><span>${l?'Ayah '+l.a:'Begin with the opening'}</span></div>${ic('arrow')}</button>
+ <div class="tiles">${[['read','book-open','Qur’an','114 Surahs'],['tasbeeh','target','Tasbeeh','Count dhikr'],['plan','calendar-check','Planner','Ramadan & week'],['taqwim','moon','Taqwim','Hijri calendar']].map(([t,i,a,b],k)=>`<button class="tile${k===0?' g':''}" data-act="go" data-t="${t}">${ic(i)}<b>${a}</b><small>${b}</small></button>`).join('')}</div>
+ <div class="muted" style="margin:.2rem 2px .6rem">Quran and Hadith text is fetched from verified sources — never AI-written</div><div id="d1"></div><div class="two"><div id="d2"></div><div id="d3"></div></div>`;
  const run=async(id,label,fn)=>{try{$(id).innerHTML=await fn()}catch(e){$(id).innerHTML=fail(id,label)}};
- run('#d1','Ayah of the day',async()=>{const r=AYAHS[doy%AYAHS.length];return card('q:'+r,'Ayah of the day',await getAyah(r))});
+ run('#d1','Ayah of the day',async()=>{const r=AYAHS[doy%AYAHS.length];return dark('q:'+r,'Ayah of the day',await getAyah(r))});
  run('#d2','Hadith of the day',async()=>{const n=HADITH[doy%HADITH.length];return card('h:'+n,'Hadith of the day',await getHadith(n))});
  run('#d3','Dua from the Quran',async()=>{const r=DUAS[doy%DUAS.length];return card('q:'+r,'Dua from the Quran',await getAyah(r))})};
 
@@ -171,4 +174,44 @@ R.saved=()=>{const B=bms(),p=LS.g('prog',{}),read=Object.values(p).reduce((a,b)=
  <div class="card"><div class="lab">Ayah bookmarks</div>${B.length?B.map(b=>{const s=SURAHS.find(x=>x.n==b.s);return`<div class="row-item"><div class="snum">${s.n}</div><div><b>${s.en}</b><div class="muted">Ayah ${b.a}</div></div><button class="btn sm ghost" data-act="open" data-s="${b.s}" data-a="${b.a}">Open</button><button class="ibtn" data-act="bm" data-s="${b.s}" data-a="${b.a}" aria-label="Remove">${ic('x')}</button></div>`}).join(''):'<p class="muted">Tap the bookmark icon beside any ayah while reading.</p>'}</div>
  ${S.length?'<div class="sh"><h2 style="font-size:15px">Saved Ayah, Hadith &amp; Dua</h2></div>'+S.map(o=>card(o.id,o.label,o)).join(''):''}`};
 window.addEventListener('beforeunload',()=>{if(pend){LS.s('last',{...pend,t:Date.now()})}});
+
+// ───────── Surah browser (Read tab) ─────────
+let so='n',fo=false;const favs=()=>LS.g('fav',[]),strip=x=>x.replace(/^(Al|An|At|As|Az|Ad|Ar|Ash)-/,'');
+$('#rarea').before(Object.assign(document.createElement('div'),{id:'sortbar',className:'tsb-pills'}),Object.assign(document.createElement('div'),{id:'slist',className:'sgrid'}),Object.assign(document.createElement('button'),{id:'rback',className:'btn ghost sm',style:'display:none;margin-bottom:.7rem',innerHTML:ic('left')+'All surahs'}));
+$('#rback').dataset.act='rback';
+const rv=on=>{$('#slist').style.display=$('#sortbar').style.display=on?'none':'';$('#rback').style.display=on?'':'none'};
+function slist(){const q=($('#rinp').value||'').toLowerCase().replace(/[^a-z0-9]/g,''),F=favs();
+ let L=SURAHS.filter(x=>!q||String(x.n)===q||x.en.toLowerCase().replace(/[^a-z0-9]/g,'').includes(q)||Object.entries(ALIASES).some(([k,v])=>v===x.en&&k.replace(/\s/g,'').includes(q)));
+ if(fo)L=L.filter(x=>F.includes(x.n));
+ L=[...L].sort(so==='a'?(x,y)=>strip(x.en).localeCompare(strip(y.en)):so==='v'?(x,y)=>y.v-x.v:so==='p'?(x,y)=>x.p-y.p||x.n-y.n:(x,y)=>x.n-y.n);
+ $('#sortbar').innerHTML=[['n','Serial'],['a','A–Z'],['v','Verses'],['p','Para']].map(([k,l])=>`<button class="pill${so===k?' on':''}" data-act="sort" data-k="${k}">${l}</button>`).join('')+`<button class="pill${fo?' on':''}" data-act="sfo">${ic('heart')} Favourites</button>`;
+ $('#slist').innerHTML=L.length?L.map(x=>`<div class="sc" role="button" tabindex="0" data-act="sopen" data-n="${x.n}"><span class="star"><span>${x.n}</span></span><div class="si"><b>${x.en}</b><small>${x.t} · ${x.v} verses · Para ${x.p}</small></div><i class="ar">${x.ar}</i><button class="ibtn heart${F.includes(x.n)?' on':''}" data-act="sfav" data-n="${x.n}" aria-label="Favourite">${ic('heart')}</button></div>`).join(''):'<div class="empty">No surah found</div>'}
+R.read=slist;
+ACT.sort=(e,d)=>{so=d.k;slist()};ACT.sfo=()=>{fo=!fo;slist()};
+ACT.sfav=(e,d)=>{let F=favs();const n=+d.n,i=F.indexOf(n);i>-1?F.splice(i,1):F.push(n);LS.s('fav',F);slist()};
+ACT.sopen=(e,d)=>{const S=SURAHS.find(x=>x.n==d.n);$('#rinp').value=S.en;renderRead({s:S,corrected:null},S.en,$('#rarea'));window.scrollTo({top:0,behavior:'smooth'})};
+ACT.rback=()=>{$('#rarea').innerHTML='';$('#rinp').value='';rv(false);slist()};
+const oR=window.renderRead;window.renderRead=(r,i,a)=>{oR(r,i,a);if(r&&r.s)rv(true)};
+$('#rinp').addEventListener('input',()=>{if($('#rback').style.display==='none')slist()});
+$('#slist').addEventListener('keydown',e=>{if(e.key==='Enter'){const c=e.target.closest('.sc');c&&c.click()}});
+const oT=window.renderTilawat;window.renderTilawat=(r,i,a)=>{oT(r,i,a);if(r&&r.s){LS.s('lastl',r.s.n);window.rp&&rp()}};
+ACT.listen=(e,d)=>{const S=SURAHS.find(x=>x.n==d.n);switchTab('tilawat');$('#inp').value=S.en;go()};
+
+// ───────── Mobile bottom navigation + More sheet ─────────
+const BN=[['today','Home'],['read','Read'],['tilawat','Listen'],['plan','Planner']],icOf=t=>TABS.find(x=>x[0]===t)[1];
+document.body.insertAdjacentHTML('beforeend',`<nav id="bnav">${BN.map(([t,l])=>`<button data-t="${t}">${ic(icOf(t))}<span>${l}</span></button>`).join('')}<button data-act="more">${ic('grid')}<span>More</span></button></nav>
+<div id="more" data-act="closemore"><div class="sheet">${SEC.map(t=>`<button class="mi" data-act="mgo" data-t="${t}">${ic(icOf(t))}<span>${TABS.find(x=>x[0]===t)[2]}</span></button>`).join('')}</div></div>`);
+$('#bnav').onclick=e=>{const b=e.target.closest('[data-t]');b&&switchTab(b.dataset.t)};
+ACT.more=()=>$('#more').classList.add('open');ACT.closemore=(e)=>{if(e.id==='more')$('#more').classList.remove('open')};
+ACT.mgo=(e,d)=>{$('#more').classList.remove('open');switchTab(d.t)};
+
+// ───────── Desktop right panel ─────────
+const rpEl=document.createElement('aside');rpEl.id='rp';document.body.append(rpEl);
+window.rp=async()=>{const l=LS.g('last'),ln=LS.g('lastl'),A=l&&SURAHS.find(x=>x.n==l.s),B=ln&&SURAHS.find(x=>x.n==ln);
+ rpEl.innerHTML=`<div class="rp-h"><small>Salam,</small><b>${hijTxt(new Date())}</b></div>
+ <div class="rp-i"><div><small>LAST READ</small><b>${A?A.en:'Not started'}</b>${l?`<span>Ayah ${l.a}</span>`:''}</div><button class="ibtn" data-act="open" data-s="${l?l.s:1}" data-a="${l?l.a:1}" aria-label="Continue reading">${ic('book-open')}</button></div>
+ <div class="rp-i"><div><small>LAST LISTENED</small><b>${B?B.en:'—'}</b></div><button class="ibtn" data-act="listen" data-n="${B?B.n:1}" aria-label="Listen">${ic('headphones')}</button></div>
+ <div class="rp-g" id="rp-a"><small>AYAH OF THE DAY</small></div>`;
+ if(innerWidth<1200)return;try{const r=AYAHS[doy%AYAHS.length],o=await getAyah(r),m=r.split(':');$('#rp-a').innerHTML=`<small>AYAH OF THE DAY</small><p>${esc(o.en)}</p><span>${esc(o.ref)}</span><button class="rp-n" data-act="open" data-s="${m[0]}" data-a="${m[1]}">Go to ayah ${ic('arrow')}</button>`}catch(e){}};
+switchTab('today');
 })();
