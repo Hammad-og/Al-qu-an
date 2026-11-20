@@ -167,6 +167,7 @@ audio::-webkit-media-controls-panel{background:var(--gl)}
 .footer-link:hover{color:var(--g)}
 .footer-copy{font-size:10px;color:#aac4ba;margin-top:2px}
 </style>
+<link rel="stylesheet" href="features.css"/>
 </head>
 <body>
 <div class="app">
@@ -176,11 +177,7 @@ audio::-webkit-media-controls-panel{background:var(--gl)}
     <div class="appsub">114 Surahs · 30 Paras · Arabic · English · Urdu · Audio Tilawat</div>
   </div>
 
-  <div class="tabs">
-    <button class="tab on" onclick="switchTab('tilawat',this)">🎧 Tilawat</button>
-    <button class="tab" onclick="switchTab('read',this)">📖 Read Quran</button>
-    <button class="tab" onclick="switchTab('para',this)">30 Paras</button>
-  </div>
+  <div class="tabs" id="tabs"></div>
 
   <!-- TILAWAT TAB -->
   <div id="tab-tilawat">
@@ -530,10 +527,11 @@ function renderTilawat(result,input,area){
     </div>
     ${isC?`<div class="correction">Showing <strong>${s.en}</strong> (corrected from "${input}")</div>`:''}
 
+    ${s.n===9?tawbahNote():''}
     <div class="audio-panel">
       <div class="audio-title">
         <span id="audio-pulse" class="stopped"></span>
-        🎙️ ${RECITERS[reciter].name} — ${s.en}
+        ${ic('mic')} ${RECITERS[reciter].name} — ${s.en}
       </div>
       <div class="reciter-tabs">
         ${Object.entries(RECITERS).map(([k,v])=>`<button class="rtab ${k===reciter?'on':''}" onclick="changeReciter('${k}',${s.n})">${v.name}</button>`).join('')}
@@ -544,7 +542,7 @@ function renderTilawat(result,input,area){
         onpause="document.getElementById('audio-pulse').classList.add('stopped')"
         onended="document.getElementById('audio-pulse').classList.add('stopped')">
       </audio>
-      <div class="audio-note">📡 Audio streams on this page · No redirect</div>
+      <div class="audio-note">Audio streams on this page · No redirect</div>
     </div>
   </div>`;
 }
@@ -564,7 +562,7 @@ function changeReciter(r,surahN){
     b.classList.toggle('on', b.textContent===RECITERS[r].name);
   });
   const titleEl=document.querySelector('.audio-title');
-  if(titleEl) titleEl.innerHTML=`<span id="audio-pulse"></span> 🎙️ ${RECITERS[r].name} — ${s.en}`;
+  if(titleEl) titleEl.innerHTML=`<span id="audio-pulse"></span> ${ic('mic')} ${RECITERS[r].name} — ${s.en}`;
 }
 
 // ─── READ ─────────────────────────────────────────────────────────────────────
@@ -652,10 +650,10 @@ async function loadAyahs(s){
     renderAyahsInto(container,container._arAyahs,container._enAyahs,container._urAyahs);
   }catch(e){
     container.innerHTML=`<div style="padding:1.5rem;text-align:center">
-      <div style="font-size:28px;margin-bottom:.5rem">⚠️</div>
+      <div style="font-size:28px;margin-bottom:.5rem;color:var(--gold)">${ic('alert')}</div>
       <div style="font-size:13px;font-weight:600;color:var(--txt)">Could not load</div>
-      <div style="font-size:11px;color:var(--txt2);margin-top:4px">On GitHub Pages this works perfectly ✓</div>
-      <button onclick="loadAyahs(SURAHS.find(x=>x.n==${s.n}))" style="margin-top:10px;padding:6px 16px;background:var(--g);color:#fff;border:none;border-radius:8px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer">🔄 Retry</button>
+      <div style="font-size:11px;color:var(--txt2);margin-top:4px">Please check your connection and try again</div>
+      <button onclick="loadAyahs(SURAHS.find(x=>x.n==${s.n}))" style="margin-top:10px;padding:6px 16px;background:var(--g);color:#fff;border:none;border-radius:8px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer">${ic('rotate')} Retry</button>
     </div>`;
   }
 }
@@ -692,18 +690,20 @@ function renderAyahsInto(container, ayahs, enAyahs, urAyahs){
     html += bismillahSepHTML(null);
   }
 
+  if (surahN === 9) html += tawbahNote(); // At-Tawbah: no Bismillah — explain gently
   // Render remaining ayahs with sequential display numbers
   for(let i = startIdx; i < displayAyahs.length; i++){
     const displayNum = i - startIdx + 1; // always 1, 2, 3...
-    html += `<div class="ayah-box">
-      <div class="ayah-num">﴿ ${displayNum} ﴾</div>
+    html += `<div class="ayah-box" data-s="${surahN}" data-a="${displayNum}">
+      <div class="ayah-num"><span>﴿ ${displayNum} ﴾</span>${ayahTools(surahN,displayNum)}</div>
       ${showLang.ar ? `<div class="ayah-ar">${displayAyahs[i].text}</div>` : ''}
       ${showLang.en ? `<div class="ayah-en">${enAyahs[i]?.text || ''}</div>` : ''}
       ${showLang.ur ? `<div class="ayah-ur">${urAyahs[i]?.text || ''}</div>` : ''}
     </div>`;
   }
 
-  container.innerHTML = html || '<div style="padding:1rem;text-align:center;font-size:12px;color:var(--txt2)">Turn on at least one language above ☝️</div>';
+  container.innerHTML = html || '<div style="padding:1rem;text-align:center;font-size:12px;color:var(--txt2)">Turn on at least one language above</div>';
+  afterRender(container);
 }
 
 function togLang(l,surahN){
@@ -795,7 +795,7 @@ function openParaSurah(surahN,paraN){
   inlineDiv.innerHTML=`<div class="para-inline-read">
     <div class="pir-hdr">
       <div class="pir-title">${s.en} — ${s.ar}</div>
-      <button class="pir-close" onclick="document.getElementById('para-inline-${surahN}').style.display='none';openParaSurahN=null">✕</button>
+      <button class="pir-close" onclick="document.getElementById('para-inline-${surahN}').style.display='none';openParaSurahN=null">${ic('x')}</button>
     </div>
     <div id="para-ayahs-${surahN}"><div class="loading-ayah"><div class="dots"><span></span><span></span><span></span></div></div></div>
   </div>`;
@@ -821,7 +821,7 @@ async function loadParaInlineAyahs(s){
   }catch(e){
     container.innerHTML=`<div style="padding:1.5rem;text-align:center">
       <div style="font-size:13px;font-weight:600;color:var(--txt)">Could not load</div>
-      <button onclick="loadParaInlineAyahs(SURAHS.find(x=>x.n==${s.n}))" style="margin-top:10px;padding:6px 16px;background:var(--g);color:#fff;border:none;border-radius:8px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer">🔄 Retry</button>
+      <button onclick="loadParaInlineAyahs(SURAHS.find(x=>x.n==${s.n}))" style="margin-top:10px;padding:6px 16px;background:var(--g);color:#fff;border:none;border-radius:8px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer">${ic('rotate')} Retry</button>
     </div>`;
   }
 }
@@ -851,16 +851,18 @@ function renderParaAyahs(container){
     html += bismillahSepHTML(null);
   }
 
+  if (surahN === 9) html += tawbahNote();
   for(let i = startIdx; i < displayA.length; i++){
     const displayNum = i - startIdx + 1;
-    html += `<div class="ayah-box">
-      <div class="ayah-num">﴿ ${displayNum} ﴾</div>
+    html += `<div class="ayah-box" data-s="${surahN}" data-a="${displayNum}">
+      <div class="ayah-num"><span>﴿ ${displayNum} ﴾</span>${ayahTools(surahN,displayNum)}</div>
       ${paraShowLang.ar ? `<div class="ayah-ar">${displayA[i].text}</div>` : ''}
       ${paraShowLang.en ? `<div class="ayah-en">${e[i]?.text || ''}</div>` : ''}
       ${paraShowLang.ur ? `<div class="ayah-ur">${u[i]?.text || ''}</div>` : ''}
     </div>`;
   }
-  container.innerHTML = html || '<div style="padding:1rem;text-align:center;font-size:12px;color:var(--txt2)">Turn on at least one language above ☝️</div>';
+  container.innerHTML = html || '<div style="padding:1rem;text-align:center;font-size:12px;color:var(--txt2)">Turn on at least one language above</div>';
+  afterRender(container);
 }
 
 function openSurahFromPara(n){
@@ -901,6 +903,7 @@ if('serviceWorker' in navigator){
   });
 }
 </script>
+<script src="features.js"></script>
 <footer class="site-footer">
   <div class="footer-built">Built with🧋by</div>
   <a class="footer-name" href="https://hammad-s.vercel.app/" target="_blank">

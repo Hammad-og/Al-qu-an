@@ -2,7 +2,7 @@
 // but HTML/manifest always use NETWORK-FIRST so updates show up immediately,
 // with cache only as an offline fallback. Ayah/audio data always comes fresh
 // from the network (Quran APIs & mp3quran.net) — never cached here.
-const CACHE_NAME = 'al-quran-app-v2';
+const CACHE_NAME = 'al-quran-app-v3';
 const APP_SHELL = [
   './',
   './index.html',
@@ -10,7 +10,9 @@ const APP_SHELL = [
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/apple-touch-icon.png',
-  './icons/favicon-32.png'
+  './favicon-32.png',
+  './features.css',
+  './features.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -30,7 +32,7 @@ self.addEventListener('activate', (event) => {
 });
 
 // Files that must always be fetched fresh first (so edits show up right away)
-const NETWORK_FIRST_FILES = ['/', '/index.html', '/manifest.json'];
+const NETWORK_FIRST_FILES = ['/', '/index.html', '/manifest.json', '/features.js', '/features.css'];
 
 self.addEventListener('fetch', (event) => {
   const req = event.request;
